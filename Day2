@@ -1,1 +1,487 @@
+- (정리한 블로그 url) : (https://blog.naver.com/pinkwow2006/223128920488)
+- 이미지 첨부되어 있음
 
+@ 2-1_네트워크 주소 체계
+
+1일차 복습 ->프로토콜 TCP-IP-이더넷-헤더 이순으로 된다. 변경은 안된다. 
+
+​
+
+​
+
+1. 포트 번호
+
+​
+
+ - TCP, UDP 헤더 안에 포함된 주소
+
+ - 주소 크기 : 16bit(0~65535)
+
+ - 참고 사이트 : www.iana.com
+
+ - 클라이언트 입장 : 서비스 요청, 실행
+
+ - 서버 입장 : 서비스 구분, 제공
+
+​
+
+User Ports (1024-49151) PC에서 사용하는 포트
+
+Dynamic/PrivatePorts (49152-65535) 동적/사설 포트
+
+​
+
+System Ports (0-1023) 서비스 예약용
+
+​
+
+TCP                     포트번호                    UDP                             포트번호             -> 포트번호 iana 에 검색 실습
+
+​
+
+http                        80                           domain/dns                   53
+
+https/ssl                443                          bootps/dgcp server     67      
+
+telnet                     23                            bootpc                            68
+
+ssh                          22                            tftp                                  69
+
+ftp                           21                           snmp                               161
+
+ftp-data                 20                            ntp                                  123
+
+smtp                       25                           syslog                               514
+
+pop3                      110
+
+mysql                     3306
+
+​
+
+위는 메뉴판으로 본다면..
+
+[예시]
+
+클라이언트(손님)                                                                      서버(주방)
+
+[50001]  
+
+[50002]
+
+[50003]    
+
+SA(출발지포트) 50001                                                             SA 53(앞의 DA로 인해서..)
+
+DA(목적지포트) 53(메뉴판의 메뉴)                                          DA 50001
+
+요청 -------------------------------->        <------------------------------응답
+
+​
+
+[50001]  -> 위의 서버 응답으로 인해 얘를 열게된다. 
+
+[50002]
+
+[50003]    
+
+​
+
+C:\Users\Administrator>netstat -n
+
+--> -n은 포트 번호로 나오라는 뜻 
+
+
+cmd 창에서 netstat -n 친거
+
+
+netstat -n 엔터 전에 네이버 접속 후 엔터한 화면 (실습) 아래 복붙함.
+
+프로토콜  로컬 주소           외부 주소              상태
+
+  TCP    127.0.0.1:25982        127.0.0.1:49782        ESTABLISHED
+
+  TCP    127.0.0.1:49782        127.0.0.1:25982        ESTABLISHED
+
+  TCP    192.168.10.15:49750    23.32.241.41:443       CLOSE_WAIT
+
+  TCP    192.168.10.15:49760    203.10.98.171:443      ESTABLISHED
+
+  TCP    192.168.10.15:52513    20.198.119.84:443      ESTABLISHED
+
+  TCP    192.168.10.15:63096    173.194.174.188:5228   ESTABLISHED
+
+  TCP    192.168.10.15:63100    23.40.248.10:443       ESTABLISHED
+
+  TCP    192.168.10.15:63103    142.250.206.195:443    ESTABLISHED
+
+  TCP    192.168.10.15:63104    43.250.152.42:443      ESTABLISHED
+
+  TCP    192.168.10.15:63105    223.130.200.104:443    ESTABLISHED
+
+  TCP    192.168.10.15:63108    211.47.28.153:443      TIME_WAIT
+
+  TCP    192.168.10.15:63120    3.37.182.92:80         TIME_WAIT
+
+  TCP    192.168.10.15:63121    3.37.182.92:80         TIME_WAIT
+
+  TCP    192.168.10.15:63125    110.93.154.77:443      ESTABLISHED
+
+  TCP    192.168.10.15:63126    110.93.151.131:443     ESTABLISHED
+
+  TCP    192.168.10.15:63127    101.79.137.172:443     ESTABLISHED
+
+  TCP    192.168.10.15:63128    110.93.151.131:443     ESTABLISHED
+
+  TCP    192.168.10.15:63130    116.120.5.215:443      ESTABLISHED
+
+  TCP    192.168.10.15:63131    101.79.137.168:443     ESTABLISHED
+
+  TCP    192.168.10.15:63132    43.250.152.56:443      ESTABLISHED
+
+  TCP    192.168.10.15:63133    101.79.137.168:443     ESTABLISHED
+
+  TCP    192.168.10.15:63134    110.93.154.74:443      ESTABLISHED
+
+  TCP    192.168.10.15:63135    210.89.168.70:443      ESTABLISHED
+
+  TCP    192.168.10.15:63137    110.93.154.74:443      ESTABLISHED
+
+  TCP    192.168.10.15:63138    223.130.192.205:443    ESTABLISHED
+
+  TCP    192.168.10.15:63139    223.130.192.205:443    ESTABLISHED
+
+  TCP    192.168.10.15:63140    223.130.192.205:443    ESTABLISHED
+
+  TCP    192.168.10.15:63141    210.89.168.79:443      ESTABLISHED
+
+  TCP    192.168.10.15:63142    210.89.168.33:443      ESTABLISHED
+
+  TCP    [fe80::e877:9336:5240:700f%8]:1521  [fe80::e877:9336:5240:700f%8]:49737  ESTABLISHED
+
+  TCP    [fe80::e877:9336:5240:700f%8]:49737  [fe80::e877:9336:5240:700f%8]:1521  ESTABLISHED
+
+​
+
+->
+
+ESTABLISHED : 서비스 연결되었다는 뜻
+
+포트번호가 나오는 것을 알 수 있음. 
+
+​
+
+[예시]
+
+~~~~~~~~~~~~~~     상태가 ESTABLISHED
+
+~~~~~~~~~~~~          20  ESTABLISHED
+
+~~~~~~~~~~~~~~    21FIN_WAIT_2
+
+~~~~~~~~~~~~~   22     CLOUSE_WAIT
+
+~~~~~~~~~~~   23          ESTABLISHED
+
+클라이언트의 IP 주소는 어떻게 되는가? : 로컬 주소가 무조건 클라이언트라고 생각하면 안됨. 뒤의 외부주소 끝에 포트들이 우리가 아는 요청하는 포트들이기에 로컬주소부분에 모로는 포트가 있는 것이 클라이언트가 된다.
+
+클라이언트가 제공받고 있는, 또는 연결된 서비스는 무엇인가 ? - telnet  이유는 ESTABLISHED 된것만. 
+
+​
+
+활성 연결
+
+​
+
+  프로토콜  로컬 주소           외부 주소              상태
+
+  TCP    127.0.0.1:1521         127.0.0.1:49160        ESTABLISHED
+
+  TCP    127.0.0.1:49160        127.0.0.1:1521         ESTABLISHED
+
+  TCP    127.0.0.1:49347        127.0.0.1:49348        ESTABLISHED
+
+  TCP    127.0.0.1:49348        127.0.0.1:49347        ESTABLISHED
+
+  TCP    192.168.14.11:49469    125.209.197.218:80     ESTABLISHED
+
+  TCP    192.168.14.11:49470    125.209.197.218:80     ESTABLISHED
+
+  TCP    192.168.14.11:49471    125.209.197.218:80     ESTABLISHED
+
+  TCP    192.168.14.11:49472    125.209.197.218:80     ESTABLISHED
+
+​
+
++알파개념 
+
+-> netstat -nt --> t는 telnet을 보여달라는 뜻
+
+​
+
++알파개념2
+
+
+​
+
+2. IP 주소
+
+​
+
+ - IP 헤더 안에 포함된 주소
+
+ - 주소 체계 : 32bit(2^32개 = 4,294,967,296)   -> 이미 다 고갈
+
+ - 로컬 환경에서 리모트 환경으로 데이터 전송 담당 -> 다른 네트워크에 전송하기 위해서 만든 것을 의미
+
+ - 설정 및 변경이 가능한 논리적인 주소
+
+​
+
+3. MAC 주소
+
+​
+
+ - ETH 헤더 안에 포함된 주소
+
+ - 주소 체계 : 48bit(2^48개)
+
+ - 변경 불가능한 물리적인 주소
+
+ - 참고 사이트 : htps://aruljohn.com/mac.pl
+
+​
+
+ - ETH 로컬 환경 내에서 데이터 전송 담당 - 예시로 강의장 안에서 전송할때 쓰는 주소
+
+ - 00-e0-4c-14-62-ba  -> 앞의 00-e0-4c 부분을 OUI 24비트라고 하는데..
+
+   ----------- OUI 24bit :이더넷 장치(ex. 랜카드) 업체가 IEEE 기관으로부터 임대받은 주소 -> 같은 제조사 뭐 이렇다면 숫자가 같겠지요..!  
+
+   -> 구글에 mac 주소 검색 
+
+​
+
+-> 00-e0-4c-14-62-ba 어디서는 이를 00:e0:4c:14:62:ba 또는 00e04c1462ba 이런식으로 표현한다.
+
+​
+
+
+[실습1] 구글에 mac주소 검색해서 실습해보니 REALTEK 제조사가 제일 많이 나온다는..
+
+
+[실습2]  oo-oo-oc 쳐서 CISCO 회사 나오는거 봐보기... 
+
+​
+
+​
+
+C:\Users\Administrator>ipconfig /all    쳐서 Realtek 부분 보임 -> 그 아래 물리적 주소 부분을 복사해서 MAC 주소 검색 -> 이는 변경 불가능한 주소 -> 이더넷 헤더안에 들어가있는 주소로 데이터 이관이 되지 않아 이럴때는 IP가 필요함.
+
+​
+
+무선 LAN 어댑터 무선 네트워크 연결:
+
+​
+
+   연결별 DNS 접미사. . . . :
+
+   설명. . . . . . . . . . . . : Realtek 8812AU Wireless LAN 802.11ac USB NIC
+
+   물리적 주소 . . . . . . . . : 90-9F-33-EB-34-98     -> MAC 주소 
+
+   DHCP 사용 . . . . . . . . . : 아니요
+
+   자동 구성 사용. . . . . . . : 예
+
+   IPv4 주소 . . . . . . . . . : 192.168.14.11(기본 설정)      -> IP 주소
+
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+
+   기본 게이트웨이 . . . . . . : 192.168.14.1    -> 게이트웨이라는 부분은 다른 네트워크로 나갈려면 게이트웨이를                                                                                 알아야함 (예시로 강의장 문)
+
+   DNS 서버. . . . . . . . . . : 168.126.63.1       
+
+                                 1.255.56.94
+
+   Tcpip를 통한 NetBIOS. . . . : 사용
+
+​
+
+​
+
+​
+
+4. IP 주소 및 MAC 주소 정보 확인
+
+​
+
+ - 윈도우에서는 'ipconfig /all' 명령을 사용하여 IP 주소 정보 및 MAC 주소 정보를 확인할 수 있다.
+
+​
+
+C:\Users\Administrator>ipconfig /all
+
+​
+
+이더넷 어댑터 이더넷:
+
+​
+
+   연결별 DNS 접미사. . . . :
+
+   설명. . . . . . . . . . . . : Realtek PCIe GbE Family Controller
+
+   물리적 주소 . . . . . . . . : 00-D8-61-6E-30-B4
+
+   DHCP 사용 . . . . . . . . . : 아니요
+
+   자동 구성 사용. . . . . . . : 예
+
+   링크-로컬 IPv6 주소 . . . . : fe80::e620:b93f:7bc4:3c01%15(기본 설정)
+
+   IPv4 주소 . . . . . . . . . : 192.168.10.27(기본 설정)
+
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+
+   기본 게이트웨이 . . . . . . : 192.168.10.1
+
+   DHCPv6 IAID . . . . . . . . : 100718689
+
+   DHCPv6 클라이언트 DUID. . . : 00-01-00-01-27-BE-97-9A-00-D8-61-6E-30-B4
+
+   DNS 서버. . . . . . . . . . : 168.126.63.1
+
+   Tcpip를 통한 NetBIOS. . . . : 사용
+
+​
+
+​
+
+ - 리눅스에서는 'ifconfig', 'ip address' 명령을 사용한다.
+
+​
+
+[root@kali: ~]# ifconfig
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+
+        inet 192.168.2.50  netmask 255.255.255.0  broadcast 192.168.2.255
+
+        inet6 fe80::20c:29ff:feb0:67b0  prefixlen 64  scopeid 0x20<link>
+
+        ether 00:0c:29:b0:67:b0  txqueuelen 1000  (Ethernet)
+
+        RX packets 1245815  bytes 536966956 (512.0 MiB)
+
+        RX errors 0  dropped 0  overruns 0  frame 0
+
+        TX packets 3004  bytes 218178 (213.0 KiB)
+
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+​
+
+eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+
+        inet 192.168.20.50  netmask 255.255.255.0  broadcast 192.168.20.255
+
+        inet6 fe80::507b:4a5a:ac41:1786  prefixlen 64  scopeid 0x20<link>
+
+        ether 00:0c:29:b0:67:ba  txqueuelen 1000  (Ethernet)
+
+        RX packets 132015  bytes 105840424 (100.9 MiB)
+
+        RX errors 0  dropped 0  overruns 0  frame 0
+
+        TX packets 1561907  bytes 424987848 (405.2 MiB)
+
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+​
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+
+        inet 127.0.0.1  netmask 255.0.0.0
+
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+
+        loop  txqueuelen 1000  (Local Loopback)
+
+        RX packets 13265  bytes 4691180 (4.4 MiB)
+
+        RX errors 0  dropped 0  overruns 0  frame 0
+
+        TX packets 13265  bytes 4691180 (4.4 MiB)
+
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+​
+
+[root@kali: ~]# 
+
+​
+
+​
+
+[IP 조회 실습]
+
+
+whois 사이드 ip 검색해보는 실습
+
+
+198.133.219.25 IP 쳐보라고 하심 -> 시스코가 관리하는 IP 관련 되어서 나옴 . 이러한 실습으로 해당 ip 조회에서는 국가와 ISP 업체 정도의 정보를 확인할 수 있는 부분을 알 수 있다. 
+
+​
+
+​
+
+​
+
+​
+
+복습하려면 유튜브에 검색 하기 - 형님 IT 
+
+https://www.youtube.com/watch?v=4v96nh18tXE&list=PLnfbQ9q1E7JQ6WlxBBAD3TpWz3oMN2InK
+
+​
+
+​
+
+
+스위치 클릭 - cli - 엔터 해서 입력에 en -> show mac address-table
+
+​
+
+​
+
+[실습]
+
+PC1 (192.168.1.1) -> PC2(10.1.1.1)
+
+​
+
+SA 192.168.1.1
+
+DA 10.1.1.1
+
+-------------------------------------------------------IP
+
+SA 0060.7030.6E19
+
+DA 0090.2b01.7e2e
+
+-------------------------------------------------------ETH
+
+​
+
+​
+
+
+
+자기한테 온것이 아니므로 IP는 디캡슐레이터 하면 안됨
+
+
+[실습ex]
+
+​
